@@ -6,7 +6,7 @@ Four built-in timers are available, numbered 0-3: `PITimer0`, `PITimer1`, `PITim
 
 Each timer's period defaults to one second. Change this with the `value()`, `period()`, or `frequency()` functions. If they're called without arguments, these functions will instead return their respective values. Period is specified in seconds, and frequency is specified in hertz. Floating-point values are fine for either. You can update these values on-the-fly, while a timer is running, if you want to.
 
-Start a timer by calling it's `start()` function. Likewise, stop it by calling `stop()`. The periodic interrupts will call their appropriate interrupt service routines, which you'll have to define yourself with the following names:
+Start a timer by calling it's `start()` function. Likewise, stop it by calling `stop()`. The periodic interrupts will call their appropriate Interrupt Service Routine (ISR), which you'll have to define yourself with the following names:
 
 - `PITimer0` &rarr; `pit0_isr()`
 - `PITimer1` &rarr; `pit1_isr()`
