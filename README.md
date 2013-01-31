@@ -1,6 +1,6 @@
 # PITimer
 
-## PIT (periodic interrupt timer) library for Teensy 3.0
+## PIT (Periodic Interrupt Timer) library for Teensy 3.0
 
 Four built-in timers are available, numbered 0-3: `PITimer0`, `PITimer1`, `PITimer2`, and `PITimer3`.
 
