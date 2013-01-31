@@ -8,10 +8,10 @@ Each timer's period defaults to one second. Change this with the `value()`, `per
 
 Start a timer by calling it's `start()` function. Likewise, stop it by calling `stop()`. The periodic interrupts will call their appropriate interrupt service routines, which you'll have to define yourself with the following names:
 
-`PITimer0` &rarr; `pit0_isr()`
-`PITimer1` &rarr; `pit1_isr()`
-`PITimer2` &rarr; `pit2_isr()`
-`PITimer3` &rarr; `pit3_isr()`
+- `PITimer0` &rarr; `pit0_isr()`
+- `PITimer1` &rarr; `pit1_isr()`
+- `PITimer2` &rarr; `pit2_isr()`
+- `PITimer3` &rarr; `pit3_isr()`
 
 These routines can't have a return value. Inside each service routine, you'll have to call the associated timer's `clear()` function in order for it to keep producing future interrupts.
 
