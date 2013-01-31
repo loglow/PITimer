@@ -1,3 +1,7 @@
+// Daniel Gilbert
+// loglow@gmail.com
+// copyright 2013
+
 #include "PITimer.h"
 #include <mk20dx128.h>
 #include <math.h>
@@ -5,7 +9,7 @@
 PITimer PITimer0(0);
 PITimer PITimer1(1);
 PITimer PITimer2(2);
-PITimer PITimer3(3);
+//PITimer PITimer3(3);
 
 void PITimer::writeValue() {
   if (myID == 0) {
@@ -45,11 +49,11 @@ unsigned long PITimer::value() {
 }
 
 float PITimer::period() {
-  return (myValue + 1) / F_BUS;
+  return (myValue + 1) / float(F_BUS);
 }
 
 float PITimer::frequency() {
-  return F_BUS / (myValue + 1);
+  return float(F_BUS) / (myValue + 1);
 }
 
 void PITimer::start() {
@@ -83,16 +87,16 @@ void PITimer::clear() {
 
 void PITimer::reset() {
   if (myID == 0) {
-    PIT_TCTRL0 = 0;
+    PIT_TCTRL0 = 1;
     PIT_TCTRL0 = 3;
   } else if (myID == 1) {
-    PIT_TCTRL1 = 0;
+    PIT_TCTRL1 = 1;
     PIT_TCTRL1 = 3;
   } else if (myID == 2) {
-    PIT_TCTRL2 = 0;
+    PIT_TCTRL2 = 1;
     PIT_TCTRL2 = 3;
   } else if (myID == 3) {
-    PIT_TCTRL3 = 0;
+    PIT_TCTRL3 = 1;
     PIT_TCTRL3 = 3;
   }
 }
@@ -130,4 +134,8 @@ unsigned long PITimer::current() {
     currentValue =  PIT_CVAL3;
   }
   return currentValue;
+}
+
+float PITimer::remains() {
+  return current() / float(F_BUS);
 }

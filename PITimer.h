@@ -1,3 +1,7 @@
+// Daniel Gilbert
+// loglow@gmail.com
+// copyright 2013
+
 #ifndef __PITIMER_H__
 #define __PITIMER_H__
 
@@ -21,11 +25,12 @@ class PITimer {
     void stop();
     bool running();
     unsigned long current();
+    float remains();
 };
 
 extern PITimer PITimer0;
 extern PITimer PITimer1;
 extern PITimer PITimer2;
-extern PITimer PITimer3;
+//extern PITimer PITimer3;
 
 #endif
