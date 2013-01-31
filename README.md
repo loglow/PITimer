@@ -2,7 +2,7 @@
 
 ## PIT (Periodic Interrupt Timer) library for Teensy 3.0
 
-Four built-in timers are available, numbered 0-3: `PITimer0`, `PITimer1`, `PITimer2`, and `PITimer3`. Note that `PITimer3` is disabled by default because it conflicts with the existing tone() functionality.
+Four built-in timers are available, numbered 0-3: `PITimer0`, `PITimer1`, `PITimer2`, and `PITimer3`. Note that `PITimer3` is disabled by default because it conflicts with the existing `tone()` functionality.
 
 Each timer's period defaults to one second. Change this with the `value()`, `period()`, or `frequency()` functions. If they're called without arguments, these functions will instead return their respective values. Period is specified in seconds, and frequency is specified in hertz. Floating-point values are fine for either. You can update these values on-the-fly, while a timer is running, if you want to.
 
