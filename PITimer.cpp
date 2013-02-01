@@ -11,6 +11,21 @@ PITimer PITimer1(1);
 PITimer PITimer2(2);
 //PITimer PITimer3(3);
 
+void pit0_isr() {
+  PITimer0.clear();
+  PITimer0.myISR();
+}
+
+void pit1_isr() {
+  PITimer1.clear();
+  PITimer1.myISR();
+}
+
+void pit2_isr() {
+  PITimer2.clear();
+  PITimer2.myISR();
+}
+
 void PITimer::writeValue() {
   if (myID == 0) {
     PIT_LDVAL0 = myValue;
@@ -56,7 +71,8 @@ float PITimer::frequency() {
   return float(F_BUS) / (myValue + 1);
 }
 
-void PITimer::start() {
+void PITimer::start(void (*newISR)()) {
+  myISR = newISR;
   isRunning = true;
   if (myID == 0) {
     PIT_TCTRL0 = 3;

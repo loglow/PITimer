@@ -19,13 +19,14 @@ class PITimer {
     unsigned long value();
     float period();
     float frequency();
-    void start();
+    void start(void (*newISR)());
     void clear();
     void reset();
     void stop();
     bool running();
     unsigned long current();
     float remains();
+    void (*myISR)();
 };
 
 extern PITimer PITimer0;
