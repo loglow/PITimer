@@ -20,7 +20,7 @@ class PITimer {
     bool isRunning;
     void writeValue();
     float round(float value);
-    static const uint16_t valueMin = 640;
+    static const uint16_t valueMin = 639;
   public:
     PITimer(uint8_t timerID);
     void value(uint32_t newValue);
