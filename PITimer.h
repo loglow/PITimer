@@ -17,9 +17,10 @@ class PITimer {
   private:
     uint8_t myID;
     uint32_t myValue;
+    uint32_t myCount;
     bool isRunning;
     void writeValue();
-    float round(float value);
+    float roundFloat(float value);
     static const uint16_t valueMin = 639;
   public:
     PITimer(uint8_t timerID);
@@ -34,6 +35,8 @@ class PITimer {
     void reset();
     void stop();
     bool running();
+    uint32_t count();
+    void zero();
     uint32_t current();
     float remains();
     void (*myISR)();

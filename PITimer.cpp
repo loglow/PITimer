@@ -56,7 +56,7 @@ void PITimer::writeValue() {
 // ------------------------------------------------------------
 // very simply rounds a float to its nearest integer value
 // ------------------------------------------------------------
-float PITimer::round(float value) {
+float PITimer::roundFloat(float value) {
   return floor(value + 0.5);
 }
 
@@ -101,7 +101,7 @@ void PITimer::value(uint32_t newValue) {
 // for 48 MHz bus, range is about 14 ns (0.000014) to 89 s (89.0)
 // ------------------------------------------------------------
 void PITimer::period(float newPeriod) {
-  uint32_t newValue = round(F_BUS * newPeriod) - 1;
+  uint32_t newValue = roundFloat(F_BUS * newPeriod) - 1;
   value(newValue);
 }
 
@@ -113,7 +113,7 @@ void PITimer::period(float newPeriod) {
 // for 48 MHz bus, range is about 12 mHz (0.012) to 75 kHz (75000)
 // ------------------------------------------------------------
 void PITimer::frequency(float newFrequency) {
-  uint32_t newValue = round(F_BUS / newFrequency) - 1;
+  uint32_t newValue = roundFloat(F_BUS / newFrequency) - 1;
   value(newValue);
 }
 
@@ -166,12 +166,14 @@ void PITimer::start(void (*newISR)()) {
 // ------------------------------------------------------------
 // clears the timer flag, allowing further interrupts to occur.
 // this is handled automatically by the PIT ISR wrappers above.
+// this function also increases the execution counter by one
 // ------------------------------------------------------------
 void PITimer::clear() {
   if      (myID == 0) PIT_TFLG0 = 1;
   else if (myID == 1) PIT_TFLG1 = 1;
   else if (myID == 2) PIT_TFLG2 = 1;
   else if (myID == 3) PIT_TFLG3 = 1;
+  myCount++;
 }
 
 
@@ -208,6 +210,24 @@ void PITimer::stop() {
 // ------------------------------------------------------------
 bool PITimer::running() {
   return isRunning;
+}
+
+
+
+// ------------------------------------------------------------
+// returns the number of times this counter has executed
+// ------------------------------------------------------------
+uint32_t PITimer::count() {
+  return myCount;
+}
+
+
+
+// ------------------------------------------------------------
+// resets the execution counter back to zero
+// ------------------------------------------------------------
+void PITimer::zero() {
+  myCount = 0;
 }
 
 
