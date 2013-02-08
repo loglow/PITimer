@@ -13,7 +13,7 @@
 
 
 
-typedef volatile uint32_t * reg;
+typedef volatile uint32_t* reg;
 
 
 
