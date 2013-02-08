@@ -40,15 +40,11 @@ void pit2_isr() { PITimer2.clear(); PITimer2.myISR(); }
 // ------------------------------------------------------------
 // the actual period of a timer is stored as a quantity
 // of bus clock cycles, and that's what "value" represents.
-// the PIT_LDVALn register is used to store this value.
 // all this function does is perform the register write.
 // it needs to be called whenever myValue is changed
 // ------------------------------------------------------------
 void PITimer::writeValue() {
-  if      (myID == 0) PIT_LDVAL0 = myValue;
-  else if (myID == 1) PIT_LDVAL1 = myValue;
-  else if (myID == 2) PIT_LDVAL2 = myValue;
-  else if (myID == 3) PIT_LDVAL3 = myValue;
+  *PIT_LDVAL = myValue;
 }
 
 
@@ -63,7 +59,8 @@ float PITimer::roundFloat(float value) {
 
 
 // ------------------------------------------------------------
-// initializer for the PITimer class, mostly used to set defaults.
+// initializer for the PITimer class, mostly used to set defaults
+// and to forward our generic pointers to a specific set of regs.
 // F_BUS is equal to the frequency of the bus clock. we're also
 // enabling the overall clock access to the PIT module, both via the
 // SIM (System Integration Module) and the PIT's own MCR (Module
@@ -71,9 +68,36 @@ float PITimer::roundFloat(float value) {
 // isn't necessary, but it doesn't do any harm either.
 // ------------------------------------------------------------
 PITimer::PITimer(uint8_t timerID) : myID(timerID), isRunning(false) {
+  
+       if (myID == 0) PIT_LDVAL = &PIT_LDVAL0;
+  else if (myID == 1) PIT_LDVAL = &PIT_LDVAL1;
+  else if (myID == 2) PIT_LDVAL = &PIT_LDVAL2;
+  else if (myID == 3) PIT_LDVAL = &PIT_LDVAL3;
+  
+       if (myID == 0) PIT_TCTRL = &PIT_TCTRL0;
+  else if (myID == 1) PIT_TCTRL = &PIT_TCTRL1;
+  else if (myID == 2) PIT_TCTRL = &PIT_TCTRL2;
+  else if (myID == 3) PIT_TCTRL = &PIT_TCTRL3;
+  
+       if (myID == 0) PIT_TFLG = &PIT_TFLG0;
+  else if (myID == 1) PIT_TFLG = &PIT_TFLG1;
+  else if (myID == 2) PIT_TFLG = &PIT_TFLG2;
+  else if (myID == 3) PIT_TFLG = &PIT_TFLG3;
+  
+       if (myID == 0) PIT_CVAL = &PIT_CVAL0;
+  else if (myID == 1) PIT_CVAL = &PIT_CVAL1;
+  else if (myID == 2) PIT_CVAL = &PIT_CVAL2;
+  else if (myID == 3) PIT_CVAL = &PIT_CVAL3;
+  
+       if (myID == 0) IRQ_PIT_CH = IRQ_PIT_CH0;
+  else if (myID == 1) IRQ_PIT_CH = IRQ_PIT_CH1;
+  else if (myID == 2) IRQ_PIT_CH = IRQ_PIT_CH2;
+  else if (myID == 3) IRQ_PIT_CH = IRQ_PIT_CH3;
+
   SIM_SCGC6 |= SIM_SCGC6_PIT;
   PIT_MCR = 0;
   value(F_BUS);
+  
 }
 
 
@@ -87,8 +111,8 @@ PITimer::PITimer(uint8_t timerID) : myID(timerID), isRunning(false) {
 // become unstable at very low values or at 2^32-1 (UINT32_MAX)
 // ------------------------------------------------------------
 void PITimer::value(uint32_t newValue) {
-  if      (newValue == UINT32_MAX) newValue = UINT32_MAX - 1;
-  else if (newValue < valueMin)    newValue = valueMin;
+  if (newValue == UINT32_MAX) newValue = UINT32_MAX - 1;
+  else if (newValue < valueMin) newValue = valueMin;
   myValue = newValue;
   writeValue();
 }
@@ -155,10 +179,8 @@ float PITimer::frequency() {
 void PITimer::start(void (*newISR)()) {
   myISR = newISR;
   isRunning = true;
-  if      (myID == 0) { PIT_TCTRL0 = 3; NVIC_ENABLE_IRQ(IRQ_PIT_CH0); }
-  else if (myID == 1) { PIT_TCTRL1 = 3; NVIC_ENABLE_IRQ(IRQ_PIT_CH1); }
-  else if (myID == 2) { PIT_TCTRL2 = 3; NVIC_ENABLE_IRQ(IRQ_PIT_CH2); }
-  else if (myID == 3) { PIT_TCTRL3 = 3; NVIC_ENABLE_IRQ(IRQ_PIT_CH3); }
+  *PIT_TCTRL = 3;
+  NVIC_ENABLE_IRQ(IRQ_PIT_CH);
 }
 
 
@@ -169,10 +191,7 @@ void PITimer::start(void (*newISR)()) {
 // this function also increases the execution counter by one
 // ------------------------------------------------------------
 void PITimer::clear() {
-  if      (myID == 0) PIT_TFLG0 = 1;
-  else if (myID == 1) PIT_TFLG1 = 1;
-  else if (myID == 2) PIT_TFLG2 = 1;
-  else if (myID == 3) PIT_TFLG3 = 1;
+  *PIT_TFLG = 1;
   myCount++;
 }
 
@@ -184,10 +203,8 @@ void PITimer::clear() {
 // until another full period of the timer's cycle has elapsed.
 // ------------------------------------------------------------
 void PITimer::reset() {
-  if      (myID == 0) { PIT_TCTRL0 = 1; PIT_TCTRL0 = 3; }
-  else if (myID == 1) { PIT_TCTRL1 = 1; PIT_TCTRL1 = 3; }
-  else if (myID == 2) { PIT_TCTRL2 = 1; PIT_TCTRL2 = 3; }
-  else if (myID == 3) { PIT_TCTRL3 = 1; PIT_TCTRL3 = 3; }
+  *PIT_TCTRL = 1;
+  *PIT_TCTRL = 3;
 }
 
 
@@ -197,10 +214,8 @@ void PITimer::reset() {
 // ------------------------------------------------------------
 void PITimer::stop() {
   isRunning = false;
-  if      (myID == 0) { NVIC_DISABLE_IRQ(IRQ_PIT_CH0); PIT_TCTRL0 = 0; }
-  else if (myID == 1) { NVIC_DISABLE_IRQ(IRQ_PIT_CH1); PIT_TCTRL1 = 0; }
-  else if (myID == 2) { NVIC_DISABLE_IRQ(IRQ_PIT_CH2); PIT_TCTRL2 = 0; }
-  else if (myID == 3) { NVIC_DISABLE_IRQ(IRQ_PIT_CH3); PIT_TCTRL3 = 0; }
+  NVIC_DISABLE_IRQ(IRQ_PIT_CH);
+  *PIT_TCTRL = 0;
 }
 
 
@@ -215,7 +230,7 @@ bool PITimer::running() {
 
 
 // ------------------------------------------------------------
-// returns the number of times this counter has executed
+// returns the number of times this timer has executed
 // ------------------------------------------------------------
 uint32_t PITimer::count() {
   return myCount;
@@ -238,12 +253,7 @@ void PITimer::zero() {
 // this number decreases until it reaches 0
 // ------------------------------------------------------------
 uint32_t PITimer::current() {
-  uint32_t currentValue = 0;
-  if      (myID == 0) currentValue = PIT_CVAL0;
-  else if (myID == 1) currentValue = PIT_CVAL1;
-  else if (myID == 2) currentValue = PIT_CVAL2;
-  else if (myID == 3) currentValue = PIT_CVAL3;
-  return currentValue;
+  return *PIT_CVAL;
 }
 
 

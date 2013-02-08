@@ -13,6 +13,10 @@
 
 
 
+typedef volatile uint32_t * reg;
+
+
+
 class PITimer {
   private:
     uint8_t myID;
@@ -22,6 +26,11 @@ class PITimer {
     void writeValue();
     float roundFloat(float value);
     static const uint16_t valueMin = 639;
+    reg PIT_LDVAL;
+    reg PIT_TCTRL;
+    reg PIT_TFLG;
+    reg PIT_CVAL;
+    uint8_t IRQ_PIT_CH;
   public:
     PITimer(uint8_t timerID);
     void value(uint32_t newValue);
