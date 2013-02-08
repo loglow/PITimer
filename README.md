@@ -22,7 +22,7 @@ Start a timer by calling it's `start()` function, and passing it the name of the
 
 ### Checking status
 
-The `current()` function will return the remaining countdown value of the current timer cycle. This value is measured in individual bus clock cycles. The default bus speed for the Teensy 3.0 is 48 MHz (aka 48,000,000 cycles). Likewise, `remains()` will return the remaining time on the counter (in seconds) as a floating-point value. Last but not least, you can use `running()` to check whether the timer is active or not.
+The `current()` function will return the remaining countdown value of the current timer cycle. This value is measured in individual bus clock cycles. The default bus speed for the Teensy 3.0 is 48 MHz (aka 48,000,000 cycles). Likewise, `remains()` will return the remaining time on the counter (in seconds) as a floating-point value. Calling the `count()` function will return the number of times the timer has executed, while calling `zero()` will reset this counter. Last but not least, you can use `running()` to check whether the timer is active or not.
 
 ### Contact
 
