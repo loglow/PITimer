@@ -2,21 +2,31 @@
 // loglow@gmail.com
 // copyright 2013
 
+
+
 #ifndef __PITIMER_H__
 #define __PITIMER_H__
 
+
+
+#include <stdint.h>
+
+
+
 class PITimer {
   private:
-    unsigned short myID;
-    unsigned long myValue;
+    uint8_t myID;
+    uint32_t myValue;
     bool isRunning;
     void writeValue();
+    float round(float value);
+    static const uint16_t valueMin = 640;
   public:
-    PITimer(unsigned short timerID);
-    void value(unsigned long newValue);
+    PITimer(uint8_t timerID);
+    void value(uint32_t newValue);
     void period(float newPeriod);
     void frequency(float newFrequency);
-    unsigned long value();
+    uint32_t value();
     float period();
     float frequency();
     void start(void (*newISR)());
@@ -24,14 +34,22 @@ class PITimer {
     void reset();
     void stop();
     bool running();
-    unsigned long current();
+    uint32_t current();
     float remains();
     void (*myISR)();
 };
+
+
 
 extern PITimer PITimer0;
 extern PITimer PITimer1;
 extern PITimer PITimer2;
 //extern PITimer PITimer3;
 
+
+
 #endif
+
+
+
+// EOF
