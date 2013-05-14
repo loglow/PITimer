@@ -13,7 +13,7 @@ Invalid values will be _silently_ fixed. For example, a period of 100 (seconds) 
 ### Valid ranges (at 48 MHz bus)
 
 - __Value:__ `639` to `4294967294` (2^32 - 2) bus clocks
-- __Period:__ `0.000013312` to `89.478485312` seconds (14 ns to 89 s)
+- __Period:__ `0.000013312` to `89.478485312` seconds (14 µs to 89 s)
 - __Frequency:__ `0.011175871` to `75000` hertz (12 mHz to 75 kHz)
 
 ### Starting and stopping
